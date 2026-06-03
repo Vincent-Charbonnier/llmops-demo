@@ -6,7 +6,7 @@ This repository is a local-first LLMOps demo for training standalone PEFT LoRA a
 
 ```mermaid
 flowchart LR
-    A[Jupyter notebooks] --> B[Synthetic datasets]
+    A[Jupyter notebooks] --> B[Synthetic training data]
     B --> C[PEFT LoRA training]
     C --> D[adapters/finance]
     C --> E[adapters/legal]
@@ -82,6 +82,12 @@ Run notebooks in order:
 10. `notebooks/10_end_to_end_demo.ipynb`
 
 Each notebook includes markdown explanations, runnable cells, architecture diagrams, example prompts, and expected outputs.
+
+Training data is stored in `training_data/` instead of `datasets/` so local files do not shadow Hugging Face's `datasets` package. The training code keeps the Hugging Face import unchanged:
+
+```python
+from datasets import load_dataset
+```
 
 ## MLflow and MinIO
 
@@ -177,7 +183,10 @@ Recommended baseline:
 
 After local training:
 
-1. Verify these directories exist:
+1. Verify these directories and files exist:
+   - `training_data/finance.json`
+   - `training_data/legal.json`
+   - `training_data/healthcare.json`
    - `adapters/finance/`
    - `adapters/legal/`
    - `adapters/healthcare/`
@@ -198,10 +207,9 @@ No model merge step is required. The LoRA adapters remain portable PEFT artifact
 - `make up`: start MLflow and MinIO
 - `make notebooks`: start JupyterLab
 - `make serve`: start vLLM with LoRA enabled
-- `make datasets`: generate datasets through the script backend
+- `make datasets`: generate `training_data/*.json` through the script backend
 - `make train`: train all adapters through the script backend
 - `make register`: register local adapters in MLflow
 - `make load-adapters`: load adapters into vLLM
 - `make api`: start FastAPI gateway
 - `make test`: run inference smoke tests and evaluation
-

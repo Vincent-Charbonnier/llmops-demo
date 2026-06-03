@@ -39,18 +39,30 @@ from pathlib import Path
 import os
 import sys
 
-PROJECT_ROOT = Path.cwd()
-if not (PROJECT_ROOT / "PROJECT_SPEC.md").exists():
-    PROJECT_ROOT = PROJECT_ROOT.parent
-os.chdir(PROJECT_ROOT)
+CURRENT_DIR = Path.cwd()
+PROJECT_ROOT = CURRENT_DIR if (CURRENT_DIR / "PROJECT_SPEC.md").exists() else CURRENT_DIR.parent
+NOTEBOOK_DIR = PROJECT_ROOT / "notebooks"
 sys.path.append(str(PROJECT_ROOT))
 
-from llmops_demo.settings import settings, ensure_dirs
+from training.config import DEFAULT_CONFIG
 
-cfg = settings()
+cfg = DEFAULT_CONFIG.copy()
+cfg["data_dir"] = str((NOTEBOOK_DIR / cfg["data_dir"]).resolve())
+cfg["output_dir"] = str((NOTEBOOK_DIR / cfg["output_dir"]).resolve())
+os.environ["DATA_DIR"] = cfg["data_dir"]
+os.environ["ADAPTER_DIR"] = cfg["output_dir"]
+os.environ.setdefault("MLFLOW_EXPERIMENT_NAME", cfg["experiment_name"])
+
+from llmops_demo.settings import ensure_dirs, settings
+
+settings_cfg = settings()
+ensure_dirs(Path(cfg["data_dir"]), Path(cfg["output_dir"]))
+
 print(f"Project root: {PROJECT_ROOT}")
-print(f"Base model: {cfg.base_model}")
-print(f"Adapters: {cfg.adapters}")
+print(f"Data dir: {cfg['data_dir']}")
+print(f"Adapter output dir: {cfg['output_dir']}")
+print(f"Base model: {settings_cfg.base_model}")
+print(f"Adapters: {settings_cfg.adapters}")
 """
 
 
@@ -61,45 +73,101 @@ def write(name: str, cells: list[dict]) -> None:
     print(f"Wrote {path}")
 
 
+def training_notebook(number: str, adapter: str, title: str) -> tuple[str, list[dict]]:
+    return (
+        f"0{number}_train_{adapter}_lora.ipynb",
+        [
+            md(
+                f"""
+                # 0{number} Train {title} LoRA Adapter
+
+                This notebook trains the `{adapter}` standalone PEFT LoRA adapter and writes it to `adapters/{adapter}/`.
+
+                ```mermaid
+                flowchart LR
+                    A[training_data/{adapter}.json] --> B[Qwen chat template]
+                    B --> C[PEFT LoRA training]
+                    C --> D[adapters/{adapter}/]
+                    C --> E[MLflow run]
+                ```
+
+                The adapter is not merged into the base model. vLLM loads it later as a runtime LoRA adapter.
+                """
+            ),
+            code(COMMON_SETUP),
+            md(
+                f"""
+                ## Preflight
+
+                Expected inputs:
+
+                - `training_data/{adapter}.json`
+                - access to the base model configured by `BASE_MODEL`
+                - CUDA GPU recommended for practical runtime
+                """
+            ),
+            code(
+                f"""
+                dataset_path = Path(cfg["data_dir"]) / "{adapter}.json"
+                adapter_path = Path(cfg["output_dir"]) / "{adapter}"
+                print(f"Dataset exists: {{dataset_path.exists()}} - {{dataset_path}}")
+                print(f"Adapter output: {{adapter_path}}")
+                """
+            ),
+            md("## Train\n\nThis calls the shared training entry point, logs to MLflow, and saves the standalone PEFT adapter."),
+            code(
+                f"""
+                from training.train_lora import train_adapter
+
+                train_adapter("{adapter}", settings_cfg)
+                """
+            ),
+            md(f"## Verify adapter files\n\nExpected output: PEFT adapter files under `adapters/{adapter}/`."),
+            code(
+                f"""
+                for path in sorted((Path(cfg["output_dir"]) / "{adapter}").glob("*")):
+                    print(path)
+                """
+            ),
+        ],
+    )
+
+
 def main() -> None:
     write(
         "01_generate_datasets.ipynb",
         [
             md(
                 """
-                # 01 Generate Synthetic Datasets
+                # 01 Generate Synthetic Training Data
 
-                This notebook creates small local supervised fine-tuning datasets for the finance, legal, and healthcare adapters.
+                This notebook creates local supervised fine-tuning data for the finance, legal, and healthcare adapters.
 
                 ```mermaid
                 flowchart LR
                     A[Domain templates] --> B[Synthetic chat records]
-                    B --> C[datasets/generated/finance.jsonl]
-                    B --> D[datasets/generated/legal.jsonl]
-                    B --> E[datasets/generated/healthcare.jsonl]
+                    B --> C[training_data/finance.json]
+                    B --> D[training_data/legal.json]
+                    B --> E[training_data/healthcare.json]
                 ```
 
-                The records use chat-style `system`, `user`, and `assistant` messages so the same files can be consumed by the Qwen chat template during LoRA training.
+                The data files are intentionally stored in `training_data/` to avoid shadowing Hugging Face's `datasets` Python package.
                 """
             ),
             code(COMMON_SETUP),
-            md("## Generate datasets\n\nExpected output: three JSONL files under `datasets/generated/`, one per adapter."),
+            md("## Generate training data\n\nExpected output: three JSON files under `training_data/`, one per adapter."),
             code(
                 """
-                import importlib.util
-
-                module_path = PROJECT_ROOT / "datasets" / "generate_synthetic.py"
-                spec = importlib.util.spec_from_file_location("generate_synthetic", module_path)
-                generator = importlib.util.module_from_spec(spec)
-                spec.loader.exec_module(generator)
+                from training.generate_synthetic import generate_domain, write_json
 
                 records_per_domain = int(os.getenv("SYNTHETIC_RECORDS_PER_DOMAIN", "60"))
-                ensure_dirs(cfg.dataset_dir)
+                data_dir = Path(cfg["data_dir"])
+                ensure_dirs(data_dir)
 
-                for adapter in cfg.adapters:
-                    rows = generator.generate_domain(adapter, records_per_domain)
-                    output_path = cfg.dataset_dir / f"{adapter}.jsonl"
-                    generator.write_jsonl(output_path, rows)
+                for adapter in settings_cfg.adapters:
+                    rows = generate_domain(adapter, records_per_domain)
+                    output_path = data_dir / f"{adapter}.json"
+                    write_json(output_path, rows)
                     print(f"{adapter}: wrote {len(rows)} records to {output_path}")
                 """
             ),
@@ -108,9 +176,10 @@ def main() -> None:
                 """
                 import json
 
-                for adapter in cfg.adapters:
-                    path = cfg.dataset_dir / f"{adapter}.jsonl"
-                    first = json.loads(path.read_text(encoding="utf-8").splitlines()[0])
+                data_dir = Path(cfg["data_dir"])
+                for adapter in settings_cfg.adapters:
+                    path = data_dir / f"{adapter}.json"
+                    first = json.loads(path.read_text(encoding="utf-8"))[0]
                     print(f"\\n[{adapter}] {first['id']}")
                     for message in first["messages"]:
                         print(f"{message['role']}: {message['content'][:160]}")
@@ -119,74 +188,12 @@ def main() -> None:
         ],
     )
 
-    train_template = """
-# 0{number} Train {Title} LoRA Adapter
-
-This notebook trains the `{adapter}` standalone PEFT LoRA adapter and writes it to `adapters/{adapter}/`.
-
-```mermaid
-flowchart LR
-    A[datasets/generated/{adapter}.jsonl] --> B[Qwen chat template]
-    B --> C[PEFT LoRA training]
-    C --> D[adapters/{adapter}/]
-    C --> E[MLflow run]
-```
-
-The adapter is not merged into the base model. vLLM will load it later as a runtime LoRA adapter.
-"""
-
-    for number, adapter, title in [
-        ("2", "finance", "Finance"),
-        ("3", "legal", "Legal"),
-        ("4", "healthcare", "Healthcare"),
+    for filename, cells in [
+        training_notebook("2", "finance", "Finance"),
+        training_notebook("3", "legal", "Legal"),
+        training_notebook("4", "healthcare", "Healthcare"),
     ]:
-        write(
-            f"0{number}_train_{adapter}_lora.ipynb",
-            [
-                md(train_template.format(number=number, adapter=adapter, Title=title)),
-                code(COMMON_SETUP),
-                md(
-                    f"""
-                    ## Preflight
-
-                    Expected inputs:
-
-                    - `datasets/generated/{adapter}.jsonl`
-                    - access to `{cfg_placeholder()}`
-                    - CUDA GPU recommended for practical runtime
-                    """
-                ),
-                code(
-                    f"""
-                    dataset_path = cfg.dataset_dir / "{adapter}.jsonl"
-                    adapter_path = cfg.adapter_dir / "{adapter}"
-                    print(f"Dataset exists: {{dataset_path.exists()}} - {{dataset_path}}")
-                    print(f"Adapter output: {{adapter_path}}")
-                    """
-                ),
-                md("## Train\n\nThis calls the shared production training entry point, logs the run to MLflow, and saves the standalone PEFT adapter."),
-                code(
-                    f"""
-                    from training.train_lora import train_adapter
-
-                    train_adapter("{adapter}", cfg)
-                    """
-                ),
-                md(
-                    f"""
-                    ## Verify adapter files
-
-                    Expected output: `adapter_config.json`, adapter weights, tokenizer files, and related PEFT metadata under `adapters/{adapter}/`.
-                    """
-                ),
-                code(
-                    f"""
-                    for path in sorted((cfg.adapter_dir / "{adapter}").glob("*")):
-                        print(path)
-                    """
-                ),
-            ],
-        )
+        write(filename, cells)
 
     write(
         "05_mlflow_tracking.ipynb",
@@ -207,29 +214,29 @@ The adapter is not merged into the base model. vLLM will load it later as a runt
                 """
             ),
             code(COMMON_SETUP),
-            md("## Configure MLflow\n\nFor local notebooks, `MLFLOW_TRACKING_URI=file:./mlruns` works without any service. With `make up`, use `http://localhost:5000`."),
+            md("## Configure MLflow\n\nFor local notebooks, file-backed MLflow works without a service. With `make up`, set `MLFLOW_TRACKING_URI=http://localhost:5000`."),
             code(
                 """
                 import mlflow
                 from mlflow.tracking import MlflowClient
 
-                mlflow.set_tracking_uri(cfg.mlflow_tracking_uri)
-                mlflow.set_experiment(cfg.mlflow_experiment_name)
+                mlflow.set_tracking_uri(settings_cfg.mlflow_tracking_uri)
+                mlflow.set_experiment(settings_cfg.mlflow_experiment_name)
                 client = MlflowClient()
-                experiment = client.get_experiment_by_name(cfg.mlflow_experiment_name)
+                experiment = client.get_experiment_by_name(settings_cfg.mlflow_experiment_name)
                 print("Tracking URI:", mlflow.get_tracking_uri())
                 print("Experiment:", experiment.name if experiment else "not created yet")
                 """
             ),
-            md("## Register local adapters\n\nExpected output: one registered model per adapter, named with `MLFLOW_REGISTERED_MODEL_PREFIX`."),
+            md("## Register local adapters\n\nExpected output: one registered model per adapter."),
             code(
                 """
-                from scripts.register_mlflow import register_local_adapter
+                from training.register_mlflow import register_local_adapter
 
-                for adapter in cfg.adapters:
-                    adapter_path = cfg.adapter_dir / adapter
+                for adapter in settings_cfg.adapters:
+                    adapter_path = Path(cfg["output_dir"]) / adapter
                     if adapter_path.exists():
-                        register_local_adapter(adapter, adapter_path, cfg)
+                        register_local_adapter(adapter, adapter_path, settings_cfg)
                     else:
                         print(f"Skipping {adapter}: {adapter_path} does not exist yet")
                 """
@@ -239,7 +246,7 @@ The adapter is not merged into the base model. vLLM will load it later as a runt
                 """
                 import pandas as pd
 
-                experiment = client.get_experiment_by_name(cfg.mlflow_experiment_name)
+                experiment = client.get_experiment_by_name(settings_cfg.mlflow_experiment_name)
                 if experiment:
                     runs = mlflow.search_runs([experiment.experiment_id])
                     cols = [
@@ -265,7 +272,7 @@ The adapter is not merged into the base model. vLLM will load it later as a runt
                 """
                 # 06 Start vLLM with LoRA Enabled
 
-                This notebook documents the local vLLM launch path. vLLM should run as an OpenAI-compatible server with LoRA enabled.
+                This notebook documents the local vLLM launch path.
 
                 ```mermaid
                 flowchart LR
@@ -278,9 +285,9 @@ The adapter is not merged into the base model. vLLM will load it later as a runt
                 """
             ),
             code(COMMON_SETUP),
-            md("## Compose command\n\nRun this in a terminal from the project root. Expected output: vLLM logs ending with an OpenAI API server listening on port 8000."),
+            md("## Compose command\n\nRun this in a terminal from the project root. Expected output: vLLM logs with an OpenAI API server on port 8000."),
             code('print("make serve")'),
-            md("## Equivalent vLLM command\n\nUse this on an MLIS host or any Linux CUDA machine with vLLM installed."),
+            md("## Equivalent vLLM command\n\nUse this on an MLIS host or Linux CUDA machine with vLLM installed."),
             code(
                 """
                 command = f'''
@@ -288,10 +295,10 @@ The adapter is not merged into the base model. vLLM will load it later as a runt
                 python -m vllm.entrypoints.openai.api_server \\
                   --host ${'{'}VLLM_HOST:-0.0.0.0{'}'} \\
                   --port ${'{'}VLLM_PORT:-8000{'}'} \\
-                  --model "{cfg.base_model}" \\
+                  --model "{settings_cfg.base_model}" \\
                   --served-model-name base \\
                   --enable-lora \\
-                  --max-model-len {cfg.vllm_max_model_len if hasattr(cfg, "vllm_max_model_len") else 4096}
+                  --max-model-len 4096
                 '''
                 print(command)
                 """
@@ -301,7 +308,11 @@ The adapter is not merged into the base model. vLLM will load it later as a runt
                 """
                 import requests
 
-                response = requests.get(f"{cfg.vllm_base_url}/v1/models", headers={"Authorization": f"Bearer {cfg.vllm_api_key}"}, timeout=10)
+                response = requests.get(
+                    f"{settings_cfg.vllm_base_url}/v1/models",
+                    headers={"Authorization": f"Bearer {settings_cfg.vllm_api_key}"},
+                    timeout=10,
+                )
                 print(response.status_code)
                 print(response.text[:1000])
                 """
@@ -316,7 +327,7 @@ The adapter is not merged into the base model. vLLM will load it later as a runt
                 """
                 # 07 Dynamically Load Adapters into vLLM
 
-                This notebook loads the local PEFT adapters into a running vLLM server.
+                This notebook loads local PEFT adapters into a running vLLM server.
 
                 ```mermaid
                 sequenceDiagram
@@ -334,8 +345,13 @@ The adapter is not merged into the base model. vLLM will load it later as a runt
                 """
                 from scripts.load_adapters import load_adapter
 
-                for adapter in cfg.adapters:
-                    load_adapter(cfg.vllm_base_url, cfg.vllm_api_key, adapter, cfg.adapter_dir / adapter)
+                for adapter in settings_cfg.adapters:
+                    load_adapter(
+                        settings_cfg.vllm_base_url,
+                        settings_cfg.vllm_api_key,
+                        adapter,
+                        Path(cfg["output_dir"]) / adapter,
+                    )
                 """
             ),
             md("## Verify vLLM model registration\n\nExpected output: `finance`, `legal`, and `healthcare` appear in `/v1/models`."),
@@ -343,7 +359,11 @@ The adapter is not merged into the base model. vLLM will load it later as a runt
                 """
                 import requests
 
-                response = requests.get(f"{cfg.vllm_base_url}/v1/models", headers={"Authorization": f"Bearer {cfg.vllm_api_key}"}, timeout=10)
+                response = requests.get(
+                    f"{settings_cfg.vllm_base_url}/v1/models",
+                    headers={"Authorization": f"Bearer {settings_cfg.vllm_api_key}"},
+                    timeout=10,
+                )
                 response.raise_for_status()
                 print(response.json())
                 """
@@ -372,10 +392,10 @@ The adapter is not merged into the base model. vLLM will load it later as a runt
                 """
             ),
             code(COMMON_SETUP),
-            md("## Routing rules\n\nThe gateway accepts an explicit `adapter` or `domain`. If none is provided, it uses simple domain keywords."),
+            md("## Routing rules\n\nThe gateway accepts explicit `adapter` or `domain` fields. If none is provided, it uses simple domain keywords."),
             code(
                 """
-                from serving.gateway import infer_adapter, ChatMessage
+                from serving.gateway import ChatMessage, infer_adapter
 
                 examples = [
                     "Explain revenue concentration risk.",
@@ -388,7 +408,7 @@ The adapter is not merged into the base model. vLLM will load it later as a runt
                     print(f"{adapter}: {prompt}")
                 """
             ),
-            md("## Start gateway\n\nRun this in a terminal. Expected output: Uvicorn serving on `http://localhost:8080`."),
+            md("## Start gateway\n\nRun this in a terminal. Expected output: Uvicorn on `http://localhost:8080`."),
             code('print("make api")'),
             md("## Test gateway request\n\nExpected output: an OpenAI-compatible chat completion plus `routed_adapter`."),
             code(
@@ -401,7 +421,7 @@ The adapter is not merged into the base model. vLLM will load it later as a runt
                     "temperature": 0.2,
                     "max_tokens": 160,
                 }
-                response = requests.post(f"{cfg.api_base_url}/chat", json=payload, timeout=60)
+                response = requests.post(f"{settings_cfg.api_base_url}/chat", json=payload, timeout=60)
                 print(response.status_code)
                 print(response.text[:1200])
                 """
@@ -416,7 +436,7 @@ The adapter is not merged into the base model. vLLM will load it later as a runt
                 """
                 # 09 Test Inference and Adapter Specialization
 
-                This notebook sends the same style of request to each adapter and compares outputs.
+                This notebook sends representative requests to each adapter and compares outputs.
 
                 ```mermaid
                 flowchart TB
@@ -435,7 +455,7 @@ The adapter is not merged into the base model. vLLM will load it later as a runt
                 """
                 from openai import OpenAI
 
-                client = OpenAI(base_url=f"{cfg.vllm_base_url}/v1", api_key=cfg.vllm_api_key)
+                client = OpenAI(base_url=f"{settings_cfg.vllm_base_url}/v1", api_key=settings_cfg.vllm_api_key)
                 prompts = {
                     "finance": "Explain revenue concentration risk in two sentences.",
                     "legal": "Explain why a limitation of liability clause matters.",
@@ -460,7 +480,7 @@ The adapter is not merged into the base model. vLLM will load it later as a runt
                 import subprocess
                 import sys
 
-                subprocess.run([sys.executable, "evaluation/evaluate.py"], check=True)
+                subprocess.run([sys.executable, str(PROJECT_ROOT / "evaluation" / "evaluate.py")], check=True)
                 """
             ),
         ],
@@ -477,7 +497,7 @@ The adapter is not merged into the base model. vLLM will load it later as a runt
 
                 ```mermaid
                 flowchart LR
-                    A[Generate datasets] --> B[Train LoRA adapters]
+                    A[Generate training data] --> B[Train LoRA adapters]
                     B --> C[Register in MLflow]
                     C --> D[Start vLLM]
                     D --> E[Load adapters]
@@ -493,11 +513,11 @@ The adapter is not merged into the base model. vLLM will load it later as a runt
                 commands = [
                     "make up",
                     "make notebooks",
-                    "python datasets/generate_synthetic.py",
+                    "python training/generate_synthetic.py",
                     "python training/train_lora.py --adapter finance",
                     "python training/train_lora.py --adapter legal",
                     "python training/train_lora.py --adapter healthcare",
-                    "python scripts/register_mlflow.py",
+                    "python training/register_mlflow.py",
                     "make serve",
                     "python scripts/load_adapters.py",
                     "make api",
@@ -519,7 +539,7 @@ The adapter is not merged into the base model. vLLM will load it later as a runt
 
                 for prompt in demo_prompts:
                     payload = {"messages": [{"role": "user", "content": prompt}], "max_tokens": 140}
-                    response = requests.post(f"{cfg.api_base_url}/chat", json=payload, timeout=60)
+                    response = requests.post(f"{settings_cfg.api_base_url}/chat", json=payload, timeout=60)
                     print("\\nPROMPT:", prompt)
                     print(response.status_code)
                     print(response.text[:1000])
@@ -534,10 +554,6 @@ The adapter is not merged into the base model. vLLM will load it later as a runt
             ),
         ],
     )
-
-
-def cfg_placeholder() -> str:
-    return "BASE_MODEL from .env"
 
 
 if __name__ == "__main__":

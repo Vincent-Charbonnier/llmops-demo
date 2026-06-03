@@ -15,11 +15,20 @@ Build a complete notebook-based LLMOps demo repository that runs locally in Jupy
 - Serving: vLLM with OpenAI-compatible APIs and `--enable-lora`
 - Gateway: FastAPI adapter routing by domain
 
+## Import Safety
+
+Training data must live under `training_data/`, not `datasets/`, to avoid shadowing the Hugging Face `datasets` package. Hugging Face imports must remain unchanged:
+
+```python
+from datasets import load_dataset
+from datasets import Dataset
+```
+
 ## Notebook Requirements
 
 Create the project primarily as Jupyter notebooks under `notebooks/`:
 
-1. `01_generate_datasets.ipynb`: generate synthetic datasets and save to `datasets/`.
+1. `01_generate_datasets.ipynb`: generate synthetic training data and save to `training_data/`.
 2. `02_train_finance_lora.ipynb`: train finance LoRA adapter and save to `adapters/finance/`.
 3. `03_train_legal_lora.ipynb`: train legal LoRA adapter and save to `adapters/legal/`.
 4. `04_train_healthcare_lora.ipynb`: train healthcare LoRA adapter and save to `adapters/healthcare/`.
@@ -30,7 +39,21 @@ Create the project primarily as Jupyter notebooks under `notebooks/`:
 9. `09_test_inference.ipynb`: test all adapters, compare outputs, and demonstrate specialization.
 10. `10_end_to_end_demo.ipynb`: run the full workflow and dynamic adapter switching demo.
 
-Each notebook must include markdown explanations, runnable cells, portable paths, environment-variable driven configuration, architecture diagrams, example prompts, and expected outputs.
+Each notebook must use:
+
+```python
+from training.config import DEFAULT_CONFIG
+```
+
+The default notebook config is:
+
+```python
+DEFAULT_CONFIG = {
+    "data_dir": "../training_data",
+    "output_dir": "../adapters",
+    "experiment_name": "llmops-demo",
+}
+```
 
 ## Additional Requirements
 
@@ -48,7 +71,15 @@ Each notebook must include markdown explanations, runnable cells, portable paths
 ## Repository Structure
 
 ```text
-datasets/
+training_data/
+  finance.json
+  legal.json
+  healthcare.json
+training/
+  config.py
+  generate_synthetic.py
+  train_lora.py
+  register_mlflow.py
 adapters/
 notebooks/
 serving/

@@ -61,16 +61,14 @@ def generate_domain(domain: str, count: int) -> list[dict[str, object]]:
     return records
 
 
-def write_jsonl(path: Path, rows: list[dict[str, object]]) -> None:
+def write_json(path: Path, rows: list[dict[str, object]]) -> None:
     ensure_dirs(path.parent)
-    with path.open("w", encoding="utf-8") as handle:
-        for row in rows:
-            handle.write(json.dumps(row, ensure_ascii=False) + "\n")
+    path.write_text(json.dumps(rows, ensure_ascii=False, indent=2), encoding="utf-8")
 
 
 def main() -> None:
     cfg = settings()
-    parser = argparse.ArgumentParser(description="Generate local synthetic SFT datasets.")
+    parser = argparse.ArgumentParser(description="Generate local synthetic SFT training data.")
     parser.add_argument("--output-dir", type=Path, default=cfg.dataset_dir)
     parser.add_argument("--records-per-domain", type=int, default=60)
     args = parser.parse_args()
@@ -79,9 +77,11 @@ def main() -> None:
         if adapter not in DOMAIN_EXAMPLES:
             raise ValueError(f"No synthetic data template for adapter '{adapter}'")
         rows = generate_domain(adapter, args.records_per_domain)
-        write_jsonl(args.output_dir / f"{adapter}.jsonl", rows)
-        print(f"Wrote {len(rows)} rows to {args.output_dir / f'{adapter}.jsonl'}")
+        output_path = args.output_dir / f"{adapter}.json"
+        write_json(output_path, rows)
+        print(f"Wrote {len(rows)} rows to {output_path}")
 
 
 if __name__ == "__main__":
     main()
+

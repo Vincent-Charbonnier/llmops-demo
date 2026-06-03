@@ -11,13 +11,13 @@ notebooks:
 	$(PYTHON) -m jupyter lab --ip $${JUPYTER_HOST:-0.0.0.0} --port $${JUPYTER_PORT:-8888} --ServerApp.token=$${JUPYTER_TOKEN:-local-dev}
 
 datasets:
-	$(PYTHON) datasets/generate_synthetic.py
+	$(PYTHON) training/generate_synthetic.py
 
 train:
 	$(PYTHON) training/train_lora.py
 
 register:
-	$(PYTHON) scripts/register_mlflow.py
+	$(PYTHON) training/register_mlflow.py
 
 serve:
 	$(DOCKER_COMPOSE) --env-file $(ENV_FILE) up vllm

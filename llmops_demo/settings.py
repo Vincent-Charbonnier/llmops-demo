@@ -29,7 +29,7 @@ def csv_env(name: str, default: str) -> list[str]:
 @dataclass(frozen=True)
 class Settings:
     base_model: str = os.getenv("BASE_MODEL", "Qwen/Qwen2.5-7B-Instruct")
-    dataset_dir: Path = Path(os.getenv("DATASET_DIR", "datasets/generated"))
+    dataset_dir: Path = Path(os.getenv("DATA_DIR", os.getenv("TRAINING_DATA_DIR", "training_data")))
     adapter_dir: Path = Path(os.getenv("ADAPTER_DIR", "adapters"))
     output_dir: Path = Path(os.getenv("OUTPUT_DIR", "outputs"))
     adapters: tuple[str, ...] = tuple(csv_env("ADAPTERS", "finance,legal,healthcare"))

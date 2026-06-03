@@ -22,7 +22,7 @@ def format_messages(example: dict, tokenizer: AutoTokenizer) -> str:
 
 
 def train_adapter(adapter: str, cfg) -> None:
-    dataset_path = cfg.dataset_dir / f"{adapter}.jsonl"
+    dataset_path = cfg.dataset_dir / f"{adapter}.json"
     if not dataset_path.exists():
         raise FileNotFoundError(f"Missing dataset {dataset_path}. Run `make datasets` first.")
 

@@ -1,0 +1,1082 @@
+[
+  {
+    "id": "finance-0000",
+    "domain": "finance",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a finance operations assistant. Give concise, practical analysis without inventing numbers."
+      },
+      {
+        "role": "user",
+        "content": "What should I check before comparing two balance sheets?"
+      },
+      {
+        "role": "assistant",
+        "content": "Compare cash, debt, working capital, retained earnings, and unusual one-time items. Confirm both statements use the same accounting period and standards."
+      }
+    ]
+  },
+  {
+    "id": "finance-0001",
+    "domain": "finance",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a finance operations assistant. Give concise, practical analysis without inventing numbers."
+      },
+      {
+        "role": "user",
+        "content": "What should I check before comparing two balance sheets?"
+      },
+      {
+        "role": "assistant",
+        "content": "Compare cash, debt, working capital, retained earnings, and unusual one-time items. Confirm both statements use the same accounting period and standards."
+      }
+    ]
+  },
+  {
+    "id": "finance-0002",
+    "domain": "finance",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a finance operations assistant. Give concise, practical analysis without inventing numbers."
+      },
+      {
+        "role": "user",
+        "content": "What should I check before comparing two balance sheets?"
+      },
+      {
+        "role": "assistant",
+        "content": "Compare cash, debt, working capital, retained earnings, and unusual one-time items. Confirm both statements use the same accounting period and standards."
+      }
+    ]
+  },
+  {
+    "id": "finance-0003",
+    "domain": "finance",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a finance operations assistant. Give concise, practical analysis without inventing numbers."
+      },
+      {
+        "role": "user",
+        "content": "Explain gross margin to a new analyst. Include one practical checklist item for scenario 3."
+      },
+      {
+        "role": "assistant",
+        "content": "Gross margin is revenue minus cost of goods sold, divided by revenue. It shows how efficiently a company turns sales into profit before operating expenses."
+      }
+    ]
+  },
+  {
+    "id": "finance-0004",
+    "domain": "finance",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a finance operations assistant. Give concise, practical analysis without inventing numbers."
+      },
+      {
+        "role": "user",
+        "content": "Explain gross margin to a new analyst. Include one practical checklist item for scenario 4."
+      },
+      {
+        "role": "assistant",
+        "content": "Gross margin is revenue minus cost of goods sold, divided by revenue. It shows how efficiently a company turns sales into profit before operating expenses."
+      }
+    ]
+  },
+  {
+    "id": "finance-0005",
+    "domain": "finance",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a finance operations assistant. Give concise, practical analysis without inventing numbers."
+      },
+      {
+        "role": "user",
+        "content": "Explain gross margin to a new analyst. Include one practical checklist item for scenario 5."
+      },
+      {
+        "role": "assistant",
+        "content": "Gross margin is revenue minus cost of goods sold, divided by revenue. It shows how efficiently a company turns sales into profit before operating expenses."
+      }
+    ]
+  },
+  {
+    "id": "finance-0006",
+    "domain": "finance",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a finance operations assistant. Give concise, practical analysis without inventing numbers."
+      },
+      {
+        "role": "user",
+        "content": "Explain gross margin to a new analyst. Include one practical checklist item for scenario 6."
+      },
+      {
+        "role": "assistant",
+        "content": "Gross margin is revenue minus cost of goods sold, divided by revenue. It shows how efficiently a company turns sales into profit before operating expenses."
+      }
+    ]
+  },
+  {
+    "id": "finance-0007",
+    "domain": "finance",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a finance operations assistant. Give concise, practical analysis without inventing numbers."
+      },
+      {
+        "role": "user",
+        "content": "Summarize the risk of high customer concentration. Include one practical checklist item for scenario 7."
+      },
+      {
+        "role": "assistant",
+        "content": "High customer concentration means revenue depends on a small number of buyers. Losing one account can materially reduce sales and cash flow."
+      }
+    ]
+  },
+  {
+    "id": "finance-0008",
+    "domain": "finance",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a finance operations assistant. Give concise, practical analysis without inventing numbers."
+      },
+      {
+        "role": "user",
+        "content": "Summarize the risk of high customer concentration. Include one practical checklist item for scenario 8."
+      },
+      {
+        "role": "assistant",
+        "content": "High customer concentration means revenue depends on a small number of buyers. Losing one account can materially reduce sales and cash flow."
+      }
+    ]
+  },
+  {
+    "id": "finance-0009",
+    "domain": "finance",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a finance operations assistant. Give concise, practical analysis without inventing numbers."
+      },
+      {
+        "role": "user",
+        "content": "Explain gross margin to a new analyst. Include one practical checklist item for scenario 9."
+      },
+      {
+        "role": "assistant",
+        "content": "Gross margin is revenue minus cost of goods sold, divided by revenue. It shows how efficiently a company turns sales into profit before operating expenses."
+      }
+    ]
+  },
+  {
+    "id": "finance-0010",
+    "domain": "finance",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a finance operations assistant. Give concise, practical analysis without inventing numbers."
+      },
+      {
+        "role": "user",
+        "content": "Summarize the risk of high customer concentration. Include one practical checklist item for scenario 10."
+      },
+      {
+        "role": "assistant",
+        "content": "High customer concentration means revenue depends on a small number of buyers. Losing one account can materially reduce sales and cash flow."
+      }
+    ]
+  },
+  {
+    "id": "finance-0011",
+    "domain": "finance",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a finance operations assistant. Give concise, practical analysis without inventing numbers."
+      },
+      {
+        "role": "user",
+        "content": "Summarize the risk of high customer concentration. Include one practical checklist item for scenario 11."
+      },
+      {
+        "role": "assistant",
+        "content": "High customer concentration means revenue depends on a small number of buyers. Losing one account can materially reduce sales and cash flow."
+      }
+    ]
+  },
+  {
+    "id": "finance-0012",
+    "domain": "finance",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a finance operations assistant. Give concise, practical analysis without inventing numbers."
+      },
+      {
+        "role": "user",
+        "content": "Summarize the risk of high customer concentration. Include one practical checklist item for scenario 12."
+      },
+      {
+        "role": "assistant",
+        "content": "High customer concentration means revenue depends on a small number of buyers. Losing one account can materially reduce sales and cash flow."
+      }
+    ]
+  },
+  {
+    "id": "finance-0013",
+    "domain": "finance",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a finance operations assistant. Give concise, practical analysis without inventing numbers."
+      },
+      {
+        "role": "user",
+        "content": "What should I check before comparing two balance sheets? Include one practical checklist item for scenario 13."
+      },
+      {
+        "role": "assistant",
+        "content": "Compare cash, debt, working capital, retained earnings, and unusual one-time items. Confirm both statements use the same accounting period and standards."
+      }
+    ]
+  },
+  {
+    "id": "finance-0014",
+    "domain": "finance",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a finance operations assistant. Give concise, practical analysis without inventing numbers."
+      },
+      {
+        "role": "user",
+        "content": "Explain gross margin to a new analyst. Include one practical checklist item for scenario 14."
+      },
+      {
+        "role": "assistant",
+        "content": "Gross margin is revenue minus cost of goods sold, divided by revenue. It shows how efficiently a company turns sales into profit before operating expenses."
+      }
+    ]
+  },
+  {
+    "id": "finance-0015",
+    "domain": "finance",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a finance operations assistant. Give concise, practical analysis without inventing numbers."
+      },
+      {
+        "role": "user",
+        "content": "Explain gross margin to a new analyst. Include one practical checklist item for scenario 15."
+      },
+      {
+        "role": "assistant",
+        "content": "Gross margin is revenue minus cost of goods sold, divided by revenue. It shows how efficiently a company turns sales into profit before operating expenses."
+      }
+    ]
+  },
+  {
+    "id": "finance-0016",
+    "domain": "finance",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a finance operations assistant. Give concise, practical analysis without inventing numbers."
+      },
+      {
+        "role": "user",
+        "content": "What should I check before comparing two balance sheets? Include one practical checklist item for scenario 16."
+      },
+      {
+        "role": "assistant",
+        "content": "Compare cash, debt, working capital, retained earnings, and unusual one-time items. Confirm both statements use the same accounting period and standards."
+      }
+    ]
+  },
+  {
+    "id": "finance-0017",
+    "domain": "finance",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a finance operations assistant. Give concise, practical analysis without inventing numbers."
+      },
+      {
+        "role": "user",
+        "content": "Explain gross margin to a new analyst. Include one practical checklist item for scenario 17."
+      },
+      {
+        "role": "assistant",
+        "content": "Gross margin is revenue minus cost of goods sold, divided by revenue. It shows how efficiently a company turns sales into profit before operating expenses."
+      }
+    ]
+  },
+  {
+    "id": "finance-0018",
+    "domain": "finance",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a finance operations assistant. Give concise, practical analysis without inventing numbers."
+      },
+      {
+        "role": "user",
+        "content": "What should I check before comparing two balance sheets? Include one practical checklist item for scenario 18."
+      },
+      {
+        "role": "assistant",
+        "content": "Compare cash, debt, working capital, retained earnings, and unusual one-time items. Confirm both statements use the same accounting period and standards."
+      }
+    ]
+  },
+  {
+    "id": "finance-0019",
+    "domain": "finance",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a finance operations assistant. Give concise, practical analysis without inventing numbers."
+      },
+      {
+        "role": "user",
+        "content": "Summarize the risk of high customer concentration. Include one practical checklist item for scenario 19."
+      },
+      {
+        "role": "assistant",
+        "content": "High customer concentration means revenue depends on a small number of buyers. Losing one account can materially reduce sales and cash flow."
+      }
+    ]
+  },
+  {
+    "id": "finance-0020",
+    "domain": "finance",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a finance operations assistant. Give concise, practical analysis without inventing numbers."
+      },
+      {
+        "role": "user",
+        "content": "What should I check before comparing two balance sheets? Include one practical checklist item for scenario 20."
+      },
+      {
+        "role": "assistant",
+        "content": "Compare cash, debt, working capital, retained earnings, and unusual one-time items. Confirm both statements use the same accounting period and standards."
+      }
+    ]
+  },
+  {
+    "id": "finance-0021",
+    "domain": "finance",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a finance operations assistant. Give concise, practical analysis without inventing numbers."
+      },
+      {
+        "role": "user",
+        "content": "Summarize the risk of high customer concentration. Include one practical checklist item for scenario 21."
+      },
+      {
+        "role": "assistant",
+        "content": "High customer concentration means revenue depends on a small number of buyers. Losing one account can materially reduce sales and cash flow."
+      }
+    ]
+  },
+  {
+    "id": "finance-0022",
+    "domain": "finance",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a finance operations assistant. Give concise, practical analysis without inventing numbers."
+      },
+      {
+        "role": "user",
+        "content": "Summarize the risk of high customer concentration. Include one practical checklist item for scenario 22."
+      },
+      {
+        "role": "assistant",
+        "content": "High customer concentration means revenue depends on a small number of buyers. Losing one account can materially reduce sales and cash flow."
+      }
+    ]
+  },
+  {
+    "id": "finance-0023",
+    "domain": "finance",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a finance operations assistant. Give concise, practical analysis without inventing numbers."
+      },
+      {
+        "role": "user",
+        "content": "Summarize the risk of high customer concentration. Include one practical checklist item for scenario 23."
+      },
+      {
+        "role": "assistant",
+        "content": "High customer concentration means revenue depends on a small number of buyers. Losing one account can materially reduce sales and cash flow."
+      }
+    ]
+  },
+  {
+    "id": "finance-0024",
+    "domain": "finance",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a finance operations assistant. Give concise, practical analysis without inventing numbers."
+      },
+      {
+        "role": "user",
+        "content": "Explain gross margin to a new analyst. Include one practical checklist item for scenario 24."
+      },
+      {
+        "role": "assistant",
+        "content": "Gross margin is revenue minus cost of goods sold, divided by revenue. It shows how efficiently a company turns sales into profit before operating expenses."
+      }
+    ]
+  },
+  {
+    "id": "finance-0025",
+    "domain": "finance",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a finance operations assistant. Give concise, practical analysis without inventing numbers."
+      },
+      {
+        "role": "user",
+        "content": "Explain gross margin to a new analyst. Include one practical checklist item for scenario 25."
+      },
+      {
+        "role": "assistant",
+        "content": "Gross margin is revenue minus cost of goods sold, divided by revenue. It shows how efficiently a company turns sales into profit before operating expenses."
+      }
+    ]
+  },
+  {
+    "id": "finance-0026",
+    "domain": "finance",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a finance operations assistant. Give concise, practical analysis without inventing numbers."
+      },
+      {
+        "role": "user",
+        "content": "What should I check before comparing two balance sheets? Include one practical checklist item for scenario 26."
+      },
+      {
+        "role": "assistant",
+        "content": "Compare cash, debt, working capital, retained earnings, and unusual one-time items. Confirm both statements use the same accounting period and standards."
+      }
+    ]
+  },
+  {
+    "id": "finance-0027",
+    "domain": "finance",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a finance operations assistant. Give concise, practical analysis without inventing numbers."
+      },
+      {
+        "role": "user",
+        "content": "Explain gross margin to a new analyst. Include one practical checklist item for scenario 27."
+      },
+      {
+        "role": "assistant",
+        "content": "Gross margin is revenue minus cost of goods sold, divided by revenue. It shows how efficiently a company turns sales into profit before operating expenses."
+      }
+    ]
+  },
+  {
+    "id": "finance-0028",
+    "domain": "finance",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a finance operations assistant. Give concise, practical analysis without inventing numbers."
+      },
+      {
+        "role": "user",
+        "content": "What should I check before comparing two balance sheets? Include one practical checklist item for scenario 28."
+      },
+      {
+        "role": "assistant",
+        "content": "Compare cash, debt, working capital, retained earnings, and unusual one-time items. Confirm both statements use the same accounting period and standards."
+      }
+    ]
+  },
+  {
+    "id": "finance-0029",
+    "domain": "finance",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a finance operations assistant. Give concise, practical analysis without inventing numbers."
+      },
+      {
+        "role": "user",
+        "content": "Explain gross margin to a new analyst. Include one practical checklist item for scenario 29."
+      },
+      {
+        "role": "assistant",
+        "content": "Gross margin is revenue minus cost of goods sold, divided by revenue. It shows how efficiently a company turns sales into profit before operating expenses."
+      }
+    ]
+  },
+  {
+    "id": "finance-0030",
+    "domain": "finance",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a finance operations assistant. Give concise, practical analysis without inventing numbers."
+      },
+      {
+        "role": "user",
+        "content": "Summarize the risk of high customer concentration. Include one practical checklist item for scenario 30."
+      },
+      {
+        "role": "assistant",
+        "content": "High customer concentration means revenue depends on a small number of buyers. Losing one account can materially reduce sales and cash flow."
+      }
+    ]
+  },
+  {
+    "id": "finance-0031",
+    "domain": "finance",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a finance operations assistant. Give concise, practical analysis without inventing numbers."
+      },
+      {
+        "role": "user",
+        "content": "Summarize the risk of high customer concentration. Include one practical checklist item for scenario 31."
+      },
+      {
+        "role": "assistant",
+        "content": "High customer concentration means revenue depends on a small number of buyers. Losing one account can materially reduce sales and cash flow."
+      }
+    ]
+  },
+  {
+    "id": "finance-0032",
+    "domain": "finance",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a finance operations assistant. Give concise, practical analysis without inventing numbers."
+      },
+      {
+        "role": "user",
+        "content": "Summarize the risk of high customer concentration. Include one practical checklist item for scenario 32."
+      },
+      {
+        "role": "assistant",
+        "content": "High customer concentration means revenue depends on a small number of buyers. Losing one account can materially reduce sales and cash flow."
+      }
+    ]
+  },
+  {
+    "id": "finance-0033",
+    "domain": "finance",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a finance operations assistant. Give concise, practical analysis without inventing numbers."
+      },
+      {
+        "role": "user",
+        "content": "What should I check before comparing two balance sheets? Include one practical checklist item for scenario 33."
+      },
+      {
+        "role": "assistant",
+        "content": "Compare cash, debt, working capital, retained earnings, and unusual one-time items. Confirm both statements use the same accounting period and standards."
+      }
+    ]
+  },
+  {
+    "id": "finance-0034",
+    "domain": "finance",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a finance operations assistant. Give concise, practical analysis without inventing numbers."
+      },
+      {
+        "role": "user",
+        "content": "Summarize the risk of high customer concentration. Include one practical checklist item for scenario 34."
+      },
+      {
+        "role": "assistant",
+        "content": "High customer concentration means revenue depends on a small number of buyers. Losing one account can materially reduce sales and cash flow."
+      }
+    ]
+  },
+  {
+    "id": "finance-0035",
+    "domain": "finance",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a finance operations assistant. Give concise, practical analysis without inventing numbers."
+      },
+      {
+        "role": "user",
+        "content": "Explain gross margin to a new analyst. Include one practical checklist item for scenario 35."
+      },
+      {
+        "role": "assistant",
+        "content": "Gross margin is revenue minus cost of goods sold, divided by revenue. It shows how efficiently a company turns sales into profit before operating expenses."
+      }
+    ]
+  },
+  {
+    "id": "finance-0036",
+    "domain": "finance",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a finance operations assistant. Give concise, practical analysis without inventing numbers."
+      },
+      {
+        "role": "user",
+        "content": "Summarize the risk of high customer concentration. Include one practical checklist item for scenario 36."
+      },
+      {
+        "role": "assistant",
+        "content": "High customer concentration means revenue depends on a small number of buyers. Losing one account can materially reduce sales and cash flow."
+      }
+    ]
+  },
+  {
+    "id": "finance-0037",
+    "domain": "finance",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a finance operations assistant. Give concise, practical analysis without inventing numbers."
+      },
+      {
+        "role": "user",
+        "content": "What should I check before comparing two balance sheets? Include one practical checklist item for scenario 37."
+      },
+      {
+        "role": "assistant",
+        "content": "Compare cash, debt, working capital, retained earnings, and unusual one-time items. Confirm both statements use the same accounting period and standards."
+      }
+    ]
+  },
+  {
+    "id": "finance-0038",
+    "domain": "finance",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a finance operations assistant. Give concise, practical analysis without inventing numbers."
+      },
+      {
+        "role": "user",
+        "content": "Explain gross margin to a new analyst. Include one practical checklist item for scenario 38."
+      },
+      {
+        "role": "assistant",
+        "content": "Gross margin is revenue minus cost of goods sold, divided by revenue. It shows how efficiently a company turns sales into profit before operating expenses."
+      }
+    ]
+  },
+  {
+    "id": "finance-0039",
+    "domain": "finance",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a finance operations assistant. Give concise, practical analysis without inventing numbers."
+      },
+      {
+        "role": "user",
+        "content": "Summarize the risk of high customer concentration. Include one practical checklist item for scenario 39."
+      },
+      {
+        "role": "assistant",
+        "content": "High customer concentration means revenue depends on a small number of buyers. Losing one account can materially reduce sales and cash flow."
+      }
+    ]
+  },
+  {
+    "id": "finance-0040",
+    "domain": "finance",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a finance operations assistant. Give concise, practical analysis without inventing numbers."
+      },
+      {
+        "role": "user",
+        "content": "Explain gross margin to a new analyst. Include one practical checklist item for scenario 40."
+      },
+      {
+        "role": "assistant",
+        "content": "Gross margin is revenue minus cost of goods sold, divided by revenue. It shows how efficiently a company turns sales into profit before operating expenses."
+      }
+    ]
+  },
+  {
+    "id": "finance-0041",
+    "domain": "finance",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a finance operations assistant. Give concise, practical analysis without inventing numbers."
+      },
+      {
+        "role": "user",
+        "content": "Explain gross margin to a new analyst. Include one practical checklist item for scenario 41."
+      },
+      {
+        "role": "assistant",
+        "content": "Gross margin is revenue minus cost of goods sold, divided by revenue. It shows how efficiently a company turns sales into profit before operating expenses."
+      }
+    ]
+  },
+  {
+    "id": "finance-0042",
+    "domain": "finance",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a finance operations assistant. Give concise, practical analysis without inventing numbers."
+      },
+      {
+        "role": "user",
+        "content": "Explain gross margin to a new analyst. Include one practical checklist item for scenario 42."
+      },
+      {
+        "role": "assistant",
+        "content": "Gross margin is revenue minus cost of goods sold, divided by revenue. It shows how efficiently a company turns sales into profit before operating expenses."
+      }
+    ]
+  },
+  {
+    "id": "finance-0043",
+    "domain": "finance",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a finance operations assistant. Give concise, practical analysis without inventing numbers."
+      },
+      {
+        "role": "user",
+        "content": "Explain gross margin to a new analyst. Include one practical checklist item for scenario 43."
+      },
+      {
+        "role": "assistant",
+        "content": "Gross margin is revenue minus cost of goods sold, divided by revenue. It shows how efficiently a company turns sales into profit before operating expenses."
+      }
+    ]
+  },
+  {
+    "id": "finance-0044",
+    "domain": "finance",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a finance operations assistant. Give concise, practical analysis without inventing numbers."
+      },
+      {
+        "role": "user",
+        "content": "Summarize the risk of high customer concentration. Include one practical checklist item for scenario 44."
+      },
+      {
+        "role": "assistant",
+        "content": "High customer concentration means revenue depends on a small number of buyers. Losing one account can materially reduce sales and cash flow."
+      }
+    ]
+  },
+  {
+    "id": "finance-0045",
+    "domain": "finance",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a finance operations assistant. Give concise, practical analysis without inventing numbers."
+      },
+      {
+        "role": "user",
+        "content": "Summarize the risk of high customer concentration. Include one practical checklist item for scenario 45."
+      },
+      {
+        "role": "assistant",
+        "content": "High customer concentration means revenue depends on a small number of buyers. Losing one account can materially reduce sales and cash flow."
+      }
+    ]
+  },
+  {
+    "id": "finance-0046",
+    "domain": "finance",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a finance operations assistant. Give concise, practical analysis without inventing numbers."
+      },
+      {
+        "role": "user",
+        "content": "Summarize the risk of high customer concentration. Include one practical checklist item for scenario 46."
+      },
+      {
+        "role": "assistant",
+        "content": "High customer concentration means revenue depends on a small number of buyers. Losing one account can materially reduce sales and cash flow."
+      }
+    ]
+  },
+  {
+    "id": "finance-0047",
+    "domain": "finance",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a finance operations assistant. Give concise, practical analysis without inventing numbers."
+      },
+      {
+        "role": "user",
+        "content": "What should I check before comparing two balance sheets? Include one practical checklist item for scenario 47."
+      },
+      {
+        "role": "assistant",
+        "content": "Compare cash, debt, working capital, retained earnings, and unusual one-time items. Confirm both statements use the same accounting period and standards."
+      }
+    ]
+  },
+  {
+    "id": "finance-0048",
+    "domain": "finance",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a finance operations assistant. Give concise, practical analysis without inventing numbers."
+      },
+      {
+        "role": "user",
+        "content": "What should I check before comparing two balance sheets? Include one practical checklist item for scenario 48."
+      },
+      {
+        "role": "assistant",
+        "content": "Compare cash, debt, working capital, retained earnings, and unusual one-time items. Confirm both statements use the same accounting period and standards."
+      }
+    ]
+  },
+  {
+    "id": "finance-0049",
+    "domain": "finance",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a finance operations assistant. Give concise, practical analysis without inventing numbers."
+      },
+      {
+        "role": "user",
+        "content": "Explain gross margin to a new analyst. Include one practical checklist item for scenario 49."
+      },
+      {
+        "role": "assistant",
+        "content": "Gross margin is revenue minus cost of goods sold, divided by revenue. It shows how efficiently a company turns sales into profit before operating expenses."
+      }
+    ]
+  },
+  {
+    "id": "finance-0050",
+    "domain": "finance",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a finance operations assistant. Give concise, practical analysis without inventing numbers."
+      },
+      {
+        "role": "user",
+        "content": "Explain gross margin to a new analyst. Include one practical checklist item for scenario 50."
+      },
+      {
+        "role": "assistant",
+        "content": "Gross margin is revenue minus cost of goods sold, divided by revenue. It shows how efficiently a company turns sales into profit before operating expenses."
+      }
+    ]
+  },
+  {
+    "id": "finance-0051",
+    "domain": "finance",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a finance operations assistant. Give concise, practical analysis without inventing numbers."
+      },
+      {
+        "role": "user",
+        "content": "Summarize the risk of high customer concentration. Include one practical checklist item for scenario 51."
+      },
+      {
+        "role": "assistant",
+        "content": "High customer concentration means revenue depends on a small number of buyers. Losing one account can materially reduce sales and cash flow."
+      }
+    ]
+  },
+  {
+    "id": "finance-0052",
+    "domain": "finance",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a finance operations assistant. Give concise, practical analysis without inventing numbers."
+      },
+      {
+        "role": "user",
+        "content": "Summarize the risk of high customer concentration. Include one practical checklist item for scenario 52."
+      },
+      {
+        "role": "assistant",
+        "content": "High customer concentration means revenue depends on a small number of buyers. Losing one account can materially reduce sales and cash flow."
+      }
+    ]
+  },
+  {
+    "id": "finance-0053",
+    "domain": "finance",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a finance operations assistant. Give concise, practical analysis without inventing numbers."
+      },
+      {
+        "role": "user",
+        "content": "What should I check before comparing two balance sheets? Include one practical checklist item for scenario 53."
+      },
+      {
+        "role": "assistant",
+        "content": "Compare cash, debt, working capital, retained earnings, and unusual one-time items. Confirm both statements use the same accounting period and standards."
+      }
+    ]
+  },
+  {
+    "id": "finance-0054",
+    "domain": "finance",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a finance operations assistant. Give concise, practical analysis without inventing numbers."
+      },
+      {
+        "role": "user",
+        "content": "Explain gross margin to a new analyst. Include one practical checklist item for scenario 54."
+      },
+      {
+        "role": "assistant",
+        "content": "Gross margin is revenue minus cost of goods sold, divided by revenue. It shows how efficiently a company turns sales into profit before operating expenses."
+      }
+    ]
+  },
+  {
+    "id": "finance-0055",
+    "domain": "finance",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a finance operations assistant. Give concise, practical analysis without inventing numbers."
+      },
+      {
+        "role": "user",
+        "content": "Summarize the risk of high customer concentration. Include one practical checklist item for scenario 55."
+      },
+      {
+        "role": "assistant",
+        "content": "High customer concentration means revenue depends on a small number of buyers. Losing one account can materially reduce sales and cash flow."
+      }
+    ]
+  },
+  {
+    "id": "finance-0056",
+    "domain": "finance",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a finance operations assistant. Give concise, practical analysis without inventing numbers."
+      },
+      {
+        "role": "user",
+        "content": "Summarize the risk of high customer concentration. Include one practical checklist item for scenario 56."
+      },
+      {
+        "role": "assistant",
+        "content": "High customer concentration means revenue depends on a small number of buyers. Losing one account can materially reduce sales and cash flow."
+      }
+    ]
+  },
+  {
+    "id": "finance-0057",
+    "domain": "finance",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a finance operations assistant. Give concise, practical analysis without inventing numbers."
+      },
+      {
+        "role": "user",
+        "content": "What should I check before comparing two balance sheets? Include one practical checklist item for scenario 57."
+      },
+      {
+        "role": "assistant",
+        "content": "Compare cash, debt, working capital, retained earnings, and unusual one-time items. Confirm both statements use the same accounting period and standards."
+      }
+    ]
+  },
+  {
+    "id": "finance-0058",
+    "domain": "finance",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a finance operations assistant. Give concise, practical analysis without inventing numbers."
+      },
+      {
+        "role": "user",
+        "content": "What should I check before comparing two balance sheets? Include one practical checklist item for scenario 58."
+      },
+      {
+        "role": "assistant",
+        "content": "Compare cash, debt, working capital, retained earnings, and unusual one-time items. Confirm both statements use the same accounting period and standards."
+      }
+    ]
+  },
+  {
+    "id": "finance-0059",
+    "domain": "finance",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a finance operations assistant. Give concise, practical analysis without inventing numbers."
+      },
+      {
+        "role": "user",
+        "content": "What should I check before comparing two balance sheets? Include one practical checklist item for scenario 59."
+      },
+      {
+        "role": "assistant",
+        "content": "Compare cash, debt, working capital, retained earnings, and unusual one-time items. Confirm both statements use the same accounting period and standards."
+      }
+    ]
+  }
+]
