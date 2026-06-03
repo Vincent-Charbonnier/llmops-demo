@@ -12,7 +12,7 @@ flowchart LR
     C --> E[adapters/legal]
     C --> F[adapters/healthcare]
     C --> G[MLflow tracking and registry]
-    G --> H[MinIO artifact store]
+    G --> H[S3 artifact store]
     D --> I[vLLM OpenAI API]
     E --> I
     F --> I
