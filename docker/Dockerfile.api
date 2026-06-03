@@ -1,0 +1,12 @@
+FROM python:3.11-slim
+
+ENV PYTHONUNBUFFERED=1 \
+    PIP_NO_CACHE_DIR=1
+
+WORKDIR /workspace
+COPY requirements.txt /workspace/requirements.txt
+RUN pip install --upgrade pip && \
+    pip install fastapi uvicorn[standard] httpx openai python-dotenv pydantic requests
+
+COPY . /workspace
+
