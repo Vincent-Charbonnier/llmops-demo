@@ -16,8 +16,7 @@ flowchart LR
     D --> I[vLLM OpenAI API]
     E --> I
     F --> I
-    I --> J[FastAPI gateway]
-    J --> K[Demo clients]
+    I --> K[Demo clients]
 ```
 
 Base model: `Qwen/Qwen2.5-7B-Instruct`
