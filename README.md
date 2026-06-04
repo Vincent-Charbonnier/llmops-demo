@@ -1,6 +1,6 @@
-# Notebook-first LLMOps Demo
+# HPE Private Cloud AI LoRA LLMOps Demo
 
-This repository is a local-first LLMOps demo for training standalone PEFT LoRA adapters in JupyterLab, tracking them in MLflow, serving them with vLLM, and routing requests through FastAPI. The same adapter artifacts and loading scripts can later be copied to an HPE MLIS + vLLM server.
+This repository is a demo for training standalone PEFT LoRA adapters in JupyterLab, tracking them in MLflow, serving them with vLLM.
 
 ## Architecture
 
