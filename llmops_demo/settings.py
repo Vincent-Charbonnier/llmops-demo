@@ -50,9 +50,9 @@ class Settings:
     lora_dropout: float = float(os.getenv("LORA_DROPOUT", "0.05"))
     load_in_4bit: bool = str_to_bool(os.getenv("LOAD_IN_4BIT"), True)
 
-    vllm_base_url: str = os.getenv("VLLM_BASE_URL", "http://localhost:8000").rstrip("/")
-    vllm_api_key: str = os.getenv("VLLM_API_KEY", "local-dev")
-    api_base_url: str = os.getenv("API_BASE_URL", "http://localhost:8080").rstrip("/")
+    vllm_base_url: str = os.getenv("VLLM_BASE_URL", "https://qwen257b.project-public.serving.hpepcai3.demo.local").rstrip("/")
+    vllm_api_key: str = os.getenv("VLLM_API_KEY", "eyJhbGciOiJSUzI1NiIsImtpZCI6IjlobTctX21Wcm9wSkVwMTduR0dRWHdNWjZBWHhPX0dQZzFadWx0Zkh0aTQifQ.eyJhdWQiOlsiYXBpIiwiaXN0aW8tY2EiXSwiZXhwIjoxODEyMDA4NjY1LCJpYXQiOjE3ODA0NzI2NjUsImlzcyI6Imh0dHBzOi8va3ViZXJuZXRlcy5kZWZhdWx0LnN2Yy5jbHVzdGVyLmxvY2FsIiwianRpIjoiMWJmZjU3OGEtNjhiNy00ZGM4LThjMDQtYWIzZWIyMDcxMDBiIiwia3ViZXJuZXRlcy5pbyI6eyJuYW1lc3BhY2UiOiJ1aSIsInNlcnZpY2VhY2NvdW50Ijp7Im5hbWUiOiJpc3ZjLWVwLTE3ODA0NzI2NjUxNjIiLCJ1aWQiOiIxNWMwNjI1My0zN2Y1LTQyMjAtOGUxNy1jZmYyYWNmOGZjYzIifX0sIm5iZiI6MTc4MDQ3MjY2NSwic3ViIjoic3lzdGVtOnNlcnZpY2VhY2NvdW50OnVpOmlzdmMtZXAtMTc4MDQ3MjY2NTE2MiJ9.TLAdJJxRZMgwNyilWzUy63yjmEVaVQUl6RRTJ3u7_d4aU4euhO9XWS9jgyhaDOgB5OxHtVJPUIouXgMnApPVhic3hRiGnuQoMc1v_-S0e3zU8VI4Yi4rCJQSrLDBqDVaOtCNpnIsonZtncrQxjjh0cLoIVy2Lb63oqBDExzLsZu9Bhb7yLO-bb_sHmJVZge1_vfLD3VsjVYhmwiVyc0b_m80euMxz_yc2F52nRoNe9WD_PlLVkq3iO5jXb8YdVtPo7gG3Gz8dpA_N2WBXMtOYWm_4DYUOozgwAmwXgzj7sHI8ExLsa9GVVVgo0fOrLTDGBQc9SXTvoKGtVY_cp8vkQ")
+    api_base_url: str = os.getenv("API_BASE_URL", "https://qwen257b.project-public.serving.hpepcai3.demo.local").rstrip("/")
 
 
 def settings() -> Settings:

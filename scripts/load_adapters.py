@@ -12,18 +12,25 @@ from llmops_demo.settings import settings
 
 
 def load_adapter(base_url: str, api_key: str, name: str, path: Path) -> None:
-    if not path.exists():
-        raise FileNotFoundError(f"Adapter path does not exist: {path}")
 
     endpoint = f"{base_url.rstrip('/')}/v1/load_lora_adapter"
+
     response = requests.post(
         endpoint,
         headers={"Authorization": f"Bearer {api_key}"},
-        json={"lora_name": name, "lora_path": str(path)},
-        timeout=60,
+        json={
+            "lora_name": name,
+            "lora_path": str(path),
+        },
+        timeout=600,
     )
+
     if response.status_code >= 400:
-        raise RuntimeError(f"Failed to load {name}: {response.status_code} {response.text}")
+        raise RuntimeError(
+            f"Failed to load {name}: "
+            f"{response.status_code} {response.text}"
+        )
+
     print(f"Loaded adapter '{name}' from {path}")
 
 
