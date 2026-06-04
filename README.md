@@ -40,17 +40,9 @@ Run notebooks in order:
 5. `notebooks/05_mlflow_tracking.ipynb`
 6. `notebooks/06_start_vllm.ipynb`
 7. `notebooks/07_load_adapters.ipynb`
-8. `notebooks/08_fastapi_gateway.ipynb`
-9. `notebooks/09_test_inference.ipynb`
-10. `notebooks/10_end_to_end_demo.ipynb`
+8. `notebooks/08_test_inference.ipynb`
 
 Each notebook includes markdown explanations, runnable cells, architecture diagrams, example prompts, and expected outputs.
-
-Training data is stored in `training_data/` instead of `datasets/` so local files do not shadow Hugging Face's `datasets` package. The training code keeps the Hugging Face import unchanged:
-
-```python
-from datasets import load_dataset
-```
 
 ## GPU Notes
 
