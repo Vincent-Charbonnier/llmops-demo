@@ -1,38 +1,51 @@
 # Notebook-first LLMOps Demo
 
-This repository is a local-first LLMOps demo for training standalone PEFT LoRA adapters in JupyterLab, tracking them in MLflow, serving them with vLLM, and routing requests through FastAPI. The same adapter artifacts and loading scripts can later be copied to an HPE MLIS + vLLM server.
+This repository demonstrates a notebook-driven workflow for creating, tracking, deploying, and testing standalone PEFT LoRA adapters for `Qwen/Qwen2.5-7B-Instruct`.
 
-## Architecture
+The current project no longer uses a Docker deployment or a FastAPI gateway. The core workflow is implemented through Jupyter notebooks, with small Python modules under `training/`, `evaluation/`, `scripts/`, and `llmops_demo/` providing reusable helper code for the notebook cells.
+
+## What It Builds
 
 ```mermaid
 flowchart LR
-    A[Jupyter notebooks] --> B[Synthetic training data]
-    B --> C[PEFT LoRA training]
+    A[Jupyter notebooks] --> B[Synthetic domain datasets]
+    B --> C[LoRA fine-tuning]
     C --> D[adapters/finance]
     C --> E[adapters/legal]
     C --> F[adapters/healthcare]
-    C --> G[MLflow tracking and registry]
-    G --> H[S3 artifact store]
-    D --> I[vLLM OpenAI API]
-    E --> I
-    F --> I
-    I --> J[FastAPI gateway]
-    J --> K[Demo clients]
+    C --> G[MLflow runs and registry entries]
+    D --> H[vLLM OpenAI-compatible endpoint]
+    E --> H
+    F --> H
+    H --> I[Notebook inference and evaluation]
 ```
 
-Base model: `Qwen/Qwen2.5-7B-Instruct`
-
-Adapters:
+The default adapter set is:
 
 - `finance`
 - `legal`
 - `healthcare`
 
-The adapters stay as standalone PEFT LoRA adapters. They are not merged into the base model.
+The adapters remain standalone PEFT LoRA artifacts. They are not merged into the base model.
 
-## Local Setup
+## Repository Layout
+
+- `notebooks/`: the main end-to-end workflow.
+- `training_data/`: generated JSON chat datasets for each domain.
+- `adapters/`: trained adapter output directories.
+- `training/generate_synthetic.py`: deterministic synthetic dataset generation.
+- `training/train_lora.py`: PEFT LoRA training and MLflow logging.
+- `training/register_mlflow.py`: registration of existing local adapters in MLflow.
+- `evaluation/evaluate.py`: lightweight adapter response evaluation.
+- `scripts/load_adapters.py`: calls the vLLM LoRA runtime loading endpoint.
+- `scripts/test_inference.py`: OpenAI-compatible smoke test against vLLM.
+- `llmops_demo/settings.py`: environment-backed project configuration.
+
+## Setup
 
 Use Python 3.11.
+
+Linux/macOS:
 
 ```bash
 python -m venv .venv
@@ -52,164 +65,196 @@ pip install -r requirements.txt
 Copy-Item .env.example .env
 ```
 
-Start local MLflow and MinIO:
+Start JupyterLab from the notebook directory so the existing notebook path setup resolves project files correctly:
 
 ```bash
-make up
+cd notebooks
+python -m jupyterlab
 ```
 
-Start JupyterLab:
-
-```bash
-make notebooks
-```
-
-Open `http://localhost:8888` and use the token from `.env` or `JUPYTER_TOKEN`.
+Then open the printed JupyterLab URL in your browser.
 
 ## Notebook Workflow
 
-Run notebooks in order:
+Run the notebooks in order:
 
-1. `notebooks/01_generate_datasets.ipynb`
-2. `notebooks/02_train_finance_lora.ipynb`
-3. `notebooks/03_train_legal_lora.ipynb`
-4. `notebooks/04_train_healthcare_lora.ipynb`
-5. `notebooks/05_mlflow_tracking.ipynb`
-6. `notebooks/06_start_vllm.ipynb`
-7. `notebooks/07_load_adapters.ipynb`
-8. `notebooks/08_fastapi_gateway.ipynb`
-9. `notebooks/09_test_inference.ipynb`
-10. `notebooks/10_end_to_end_demo.ipynb`
+1. `01_generate_datasets.ipynb`
+2. `02_train_finance_lora.ipynb`
+3. `03_train_legal_lora.ipynb`
+4. `04_train_healthcare_lora.ipynb`
+5. `05_mlflow_tracking.ipynb`
+6. `06_start_vllm.ipynb`
+7. `07_load_adapters.ipynb`
+8. `08_test_inference.ipynb`
 
-Each notebook includes markdown explanations, runnable cells, architecture diagrams, example prompts, and expected outputs.
+### 1. Generate Datasets
 
-Training data is stored in `training_data/` instead of `datasets/` so local files do not shadow Hugging Face's `datasets` package. The training code keeps the Hugging Face import unchanged:
+`01_generate_datasets.ipynb` creates deterministic synthetic chat datasets for each domain using templates in `training/generate_synthetic.py`.
 
-```python
-from datasets import load_dataset
-```
+Outputs:
 
-## MLflow and MinIO
+- `training_data/finance.json`
+- `training_data/legal.json`
+- `training_data/healthcare.json`
 
-`docker-compose.yml` provides:
+Each record contains OpenAI-style `messages` with a system prompt, user instruction, and assistant response.
 
-- MLflow UI on `http://localhost:5000`
-- MinIO API on `http://localhost:9000`
-- MinIO console on `http://localhost:9001`
+### 2. Train LoRA Adapters
 
-Default local credentials are configured in `.env.example`:
+`02_train_finance_lora.ipynb`, `03_train_legal_lora.ipynb`, and `04_train_healthcare_lora.ipynb` each call `training.train_lora.train_adapter(...)`.
 
-```text
-AWS_ACCESS_KEY_ID=minioadmin
-AWS_SECRET_ACCESS_KEY=minioadmin
-MLFLOW_ARTIFACT_BUCKET=mlflow
-```
+Training loads the base model, applies a PEFT LoRA configuration, formats the JSON chat records through the tokenizer chat template, and saves one adapter directory per domain.
 
-For the simplest notebook-only path, the default tracking URI is file-backed:
+Outputs:
+
+- `adapters/finance/`
+- `adapters/legal/`
+- `adapters/healthcare/`
+
+Training also logs parameters, tags, and adapter artifacts to MLflow.
+
+### 3. Track and Register in MLflow
+
+`05_mlflow_tracking.ipynb` configures MLflow, registers any local adapters that already exist, and displays recent experiment runs.
+
+By default, MLflow is file-backed and does not require a service:
 
 ```text
 MLFLOW_TRACKING_URI=file:./mlruns
 ```
 
-To use the MLflow service instead, set:
+Registered model names use this pattern:
 
 ```text
-MLFLOW_TRACKING_URI=http://localhost:5000
+qwen2_5_7b_lora_<adapter>
 ```
 
-The training notebooks and scripts log adapter metadata, training parameters, adapter artifacts, and registered model entries named like `qwen2_5_7b_lora_finance`.
+For example:
 
-## Serving
+- `qwen2_5_7b_lora_finance`
+- `qwen2_5_7b_lora_legal`
+- `qwen2_5_7b_lora_healthcare`
 
-Start vLLM locally:
+The MLflow model wrapper points to the standalone adapter artifact. It does not package a merged model.
 
-```bash
-make serve
-```
+### 4. Start vLLM
 
-The vLLM service runs with:
+`06_start_vllm.ipynb` documents the vLLM serving configuration used for LoRA runtime loading.
+
+For MLIS or another vLLM deployment, configure vLLM with:
 
 ```text
---enable-lora
 VLLM_ALLOW_RUNTIME_LORA_UPDATING=True
 ```
 
-Load adapters dynamically:
+and start it with LoRA support, for example:
 
-```bash
-python scripts/load_adapters.py
+```text
+--served-model-name base --enable-lora --max-model-len 4096
 ```
 
-The loader calls the OpenAI-compatible vLLM server's LoRA management endpoint:
+The notebook then checks the OpenAI-compatible model endpoint:
+
+```text
+GET /v1/models
+```
+
+### 5. Load Adapters into vLLM
+
+`07_load_adapters.ipynb` downloads adapter artifacts from MLflow, places them where the vLLM server can read them, and loads each adapter through:
 
 ```text
 POST /v1/load_lora_adapter
 ```
 
-Start the FastAPI gateway:
+The helper implementation is in `scripts/load_adapters.py`.
 
-```bash
-make api
+The loaded model names match the adapter names:
+
+- `finance`
+- `legal`
+- `healthcare`
+
+### 6. Test Inference
+
+`08_test_inference.ipynb` uses the OpenAI Python client against the vLLM OpenAI-compatible API:
+
+```python
+from openai import OpenAI
+
+client = OpenAI(
+    base_url=f"{settings_cfg.vllm_base_url}/v1",
+    api_key=settings_cfg.vllm_api_key,
+)
 ```
 
-The gateway exposes:
+It sends prompts to the adapter model names and runs a lightweight keyword-based evaluation through `evaluation/evaluate.py`.
 
-- `GET /health`
-- `POST /chat`
-- `POST /v1/chat/completions`
+## Configuration
 
-Example routed request:
+Most settings are read from `.env` through `llmops_demo/settings.py`.
 
-```bash
-curl -X POST http://localhost:8080/chat \
-  -H "Content-Type: application/json" \
-  -d '{"messages":[{"role":"user","content":"Explain revenue concentration risk."}]}'
+Common settings:
+
+```text
+BASE_MODEL=Qwen/Qwen2.5-7B-Instruct
+DATA_DIR=training_data
+ADAPTER_DIR=adapters
+OUTPUT_DIR=outputs
+ADAPTERS=finance,legal,healthcare
+
+MLFLOW_TRACKING_URI=file:./mlruns
+MLFLOW_EXPERIMENT_NAME=llmops-lora-demo
+MLFLOW_REGISTERED_MODEL_PREFIX=qwen2_5_7b_lora
+
+TRAIN_EPOCHS=1
+TRAIN_BATCH_SIZE=1
+GRADIENT_ACCUMULATION_STEPS=4
+LEARNING_RATE=0.0002
+MAX_SEQ_LENGTH=1024
+LORA_R=16
+LORA_ALPHA=32
+LORA_DROPOUT=0.05
+
+VLLM_BASE_URL=http://localhost:8000
+VLLM_API_KEY=local-dev
 ```
 
-Expected behavior: the gateway routes finance prompts to the `finance` adapter, legal prompts to `legal`, healthcare prompts to `healthcare`, and unknown prompts to `base`.
+Update `VLLM_BASE_URL` and `VLLM_API_KEY` when targeting an MLIS or remote vLLM endpoint.
 
-## GPU Notes
+## Optional Script Entry Points
 
-Practical local training and vLLM serving require a CUDA GPU.
+The notebooks are the primary interface, but the same backend code can be called directly:
+
+```bash
+python training/generate_synthetic.py
+python training/train_lora.py --adapter finance
+python training/register_mlflow.py
+python scripts/load_adapters.py --base-url http://localhost:8000
+python scripts/test_inference.py --adapter finance
+python evaluation/evaluate.py
+```
+
+These scripts are useful for smoke tests and automation, but the expected demo flow is to run the notebooks.
+
+## Hardware Notes
+
+Training and vLLM serving are intended for a CUDA-capable environment.
 
 Recommended baseline:
 
-- 16 GB VRAM minimum for small quantized LoRA experiments
-- 24 GB or more VRAM for smoother local serving
-- Linux or WSL2 for vLLM and `bitsandbytes`
-- NVIDIA Container Toolkit for Docker GPU access
+- 16 GB VRAM minimum for small LoRA experiments.
+- 24 GB or more VRAM for smoother local serving.
+- Linux or WSL2 for vLLM and `bitsandbytes`.
 
-## MLIS Migration
+On Windows, `bitsandbytes` and `vllm` are excluded by environment markers in `requirements.txt`, so training or serving may need to run on Linux, WSL2, MLIS, or another GPU host.
 
-After local training:
+## Expected End State
 
-1. Verify these directories and files exist:
-   - `training_data/finance.json`
-   - `training_data/legal.json`
-   - `training_data/healthcare.json`
-   - `adapters/finance/`
-   - `adapters/legal/`
-   - `adapters/healthcare/`
-2. Copy `adapters/`, `.env`, `scripts/load_adapters.py`, and the serving configuration to the MLIS environment.
-3. Set MLIS environment variables:
-   - `BASE_MODEL` to the MLIS-visible base model path or model id
-   - `ADAPTER_DIR` to the mounted adapter directory
-   - `VLLM_BASE_URL` to the remote vLLM endpoint
-   - `VLLM_API_KEY` if required
-4. Start remote vLLM with `--enable-lora` and `VLLM_ALLOW_RUNTIME_LORA_UPDATING=True`.
-5. Run `python scripts/load_adapters.py`.
-6. Point the FastAPI gateway or demo client at the remote vLLM endpoint.
+After completing the notebook workflow, you should have:
 
-No model merge step is required. The LoRA adapters remain portable PEFT artifacts.
-
-## Make Targets
-
-- `make up`: start MLflow and MinIO
-- `make notebooks`: start JupyterLab
-- `make serve`: start vLLM with LoRA enabled
-- `make datasets`: generate `training_data/*.json` through the script backend
-- `make train`: train all adapters through the script backend
-- `make register`: register local adapters in MLflow
-- `make load-adapters`: load adapters into vLLM
-- `make api`: start FastAPI gateway
-- `make test`: run inference smoke tests and evaluation
+- Three JSON training datasets under `training_data/`.
+- Three PEFT LoRA adapter directories under `adapters/`.
+- MLflow runs and registered adapter model entries.
+- A vLLM endpoint serving `base`, `finance`, `legal`, and `healthcare` model names.
+- Successful notebook inference calls against the loaded adapters.
