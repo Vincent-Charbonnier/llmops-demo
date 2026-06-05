@@ -259,7 +259,6 @@ ADAPTER_DIR=adapters
 OUTPUT_DIR=outputs
 ADAPTERS=finance,legal,healthcare
 
-MLFLOW_TRACKING_URI=file:./mlruns
 MLFLOW_EXPERIMENT_NAME=llmops-lora-demo
 MLFLOW_REGISTERED_MODEL_PREFIX=qwen2_5_7b_lora
 
