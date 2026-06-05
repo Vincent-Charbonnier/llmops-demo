@@ -1,8 +1,6 @@
-# Notebook-first LLMOps Demo
+Fine-tuning with LoRA LLMOps Demo on HPE Private Cloud AI
 
 This repository demonstrates a notebook-driven workflow for creating, tracking, deploying, routing, and testing standalone PEFT LoRA adapters for `Qwen/Qwen2.5-7B-Instruct`.
-
-The demo now includes an OpenAI-compatible FastAPI gateway that classifies each user request, routes it to the matching LoRA adapter when appropriate, and exposes a single chat endpoint for downstream clients. An Open WebUI pipeline is included so end users can chat through the gateway without choosing adapters manually.
 
 ## What It Builds
 
@@ -52,39 +50,6 @@ The default routed domains are:
 - `gateway/tests/`: gateway unit tests for routing behavior and API key forwarding.
 - `k8s/`: Kubernetes deployment and service manifests for the gateway.
 - `lora_gateway.py`: Open WebUI pipeline that sends chat requests to the gateway.
-
-## Setup
-
-Use Python 3.11.
-
-Linux/macOS:
-
-```bash
-python -m venv .venv
-source .venv/bin/activate
-pip install --upgrade pip
-pip install -r requirements.txt
-cp .env.example .env
-```
-
-Windows PowerShell:
-
-```powershell
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-pip install --upgrade pip
-pip install -r requirements.txt
-Copy-Item .env.example .env
-```
-
-Start JupyterLab from the notebook directory so the existing notebook path setup resolves project files correctly:
-
-```bash
-cd notebooks
-python -m jupyterlab
-```
-
-Then open the printed JupyterLab URL in your browser.
 
 ## Notebook Workflow
 
@@ -243,70 +208,7 @@ The gateway response includes the normal chat completion payload plus:
 - `confidence`
 - `routed_domain`
 
-### Run the Gateway Locally
-
-Install the gateway dependencies:
-
-```bash
-pip install -r gateway/requirements.txt
-```
-
-Run the gateway against a local or remote vLLM endpoint:
-
-Linux/macOS:
-
-```bash
-export VLLM_URL=http://localhost:8000
-export VLLM_API_KEY=local-dev
-export BASE_MODEL=Qwen/Qwen2.5-7B-Instruct
-uvicorn gateway.app:app --host 0.0.0.0 --port 9000
-```
-
-Windows PowerShell:
-
-```powershell
-$env:VLLM_URL = "http://localhost:8000"
-$env:VLLM_API_KEY = "local-dev"
-$env:BASE_MODEL = "Qwen/Qwen2.5-7B-Instruct"
-uvicorn gateway.app:app --host 0.0.0.0 --port 9000
-```
-
-Smoke test the route:
-
-```bash
-curl http://localhost:9000/v1/chat/completions \
-  -H "Content-Type: application/json" \
-  -d '{
-    "messages": [
-      {
-        "role": "user",
-        "content": "Explain how portfolio diversification changes risk."
-      }
-    ],
-    "temperature": 0.2,
-    "max_tokens": 256
-  }'
-```
-
-### Gateway Container
-
-Build the gateway image from the repository root:
-
-```bash
-docker build -f gateway/Dockerfile -t llm-gateway:latest .
-```
-
-Run it:
-
-```bash
-docker run --rm -p 9000:9000 \
-  -e VLLM_URL=http://host.docker.internal:8000 \
-  -e VLLM_API_KEY=local-dev \
-  -e BASE_MODEL=Qwen/Qwen2.5-7B-Instruct \
-  llm-gateway:latest
-```
-
-### Kubernetes Deployment
+### Gateway Kubernetes Deployment
 
 The gateway manifests are:
 
@@ -404,40 +306,13 @@ python evaluation/evaluate.py
 
 These scripts are useful for smoke tests and automation, but the expected demo flow is to run the notebooks first, then deploy the gateway and Open WebUI pipeline.
 
-## Tests
-
-Run the gateway tests with:
-
-Linux/macOS:
-
-```bash
-PYTHONPATH=. pytest gateway/tests
-```
-
-Windows PowerShell:
-
-```powershell
-$env:PYTHONPATH = "."
-pytest gateway/tests
-```
-
-The tests mock vLLM calls and verify that:
-
-- vLLM API keys are forwarded.
-- classified domain requests receive the expected adapter.
-- general requests use the base model without `extra_body`.
-
 ## Hardware Notes
 
 Training and vLLM serving are intended for a CUDA-capable environment.
 
 Recommended baseline:
-
-- 16 GB VRAM minimum for small LoRA experiments.
-- 24 GB or more VRAM for smoother local serving.
-- Linux or WSL2 for vLLM and `bitsandbytes`.
-
-On Windows, `bitsandbytes` and `vllm` are excluded by environment markers in `requirements.txt`, so training or serving may need to run on Linux, WSL2, MLIS, or another GPU host.
+- Notebook: 1 vGPU with 16 GB VRAM minimum for small LoRA experiments.
+- vLLM: 1 vGPU with 24 GB VRAM or more for smoother local serving.
 
 The gateway and Open WebUI pipeline do not require a GPU. They only need network access to the vLLM endpoint.
 
