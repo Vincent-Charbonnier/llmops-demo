@@ -152,6 +152,7 @@ client = OpenAI(
     base_url=f"{settings_cfg.vllm_base_url}/v1",
     api_key=settings_cfg.vllm_api_key,
 )
+```
 
 ### 7. LLMOps
 
