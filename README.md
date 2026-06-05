@@ -63,6 +63,7 @@ Run the notebooks in order:
 6. `06_start_vllm.ipynb`
 7. `07_load_adapters.ipynb`
 8. `08_test_inference.ipynb`
+9. `09_llmops.ipynb`
 
 ### 1. Generate Datasets
 
@@ -151,9 +152,10 @@ client = OpenAI(
     base_url=f"{settings_cfg.vllm_base_url}/v1",
     api_key=settings_cfg.vllm_api_key,
 )
-```
 
-It sends prompts to the adapter model names and runs a lightweight keyword-based evaluation through `evaluation/evaluate.py`.
+### 7. LLMOps
+
+`09_llmops.ipynb` triggers vLLM adapter update when a new adapter is promoted to `prod`.
 
 ## Gateway Routing
 
