@@ -94,12 +94,6 @@ Training also logs parameters, tags, and adapter artifacts to MLflow.
 
 `05_mlflow_tracking.ipynb` configures MLflow, registers any local adapters that already exist, and displays recent experiment runs.
 
-By default, MLflow is file-backed and does not require a service:
-
-```text
-MLFLOW_TRACKING_URI=file:./mlruns
-```
-
 Registered model names use this pattern:
 
 ```text
@@ -118,22 +112,16 @@ The MLflow model wrapper points to the standalone adapter artifact. It does not 
 
 `06_start_vllm.ipynb` documents the vLLM serving configuration used for LoRA runtime loading.
 
-For MLIS or another vLLM deployment, configure vLLM with:
+For MLIS or another vLLM deployment, configure vLLM environment with:
 
 ```text
 VLLM_ALLOW_RUNTIME_LORA_UPDATING=True
 ```
 
-and start it with LoRA support, for example:
+and advanced settings with LoRA support, for example:
 
 ```text
 --served-model-name base --enable-lora --max-model-len 4096
-```
-
-The notebook then checks the OpenAI-compatible model endpoint:
-
-```text
-GET /v1/models
 ```
 
 ### 5. Load Adapters into vLLM
